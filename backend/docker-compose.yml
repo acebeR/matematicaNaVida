@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  meu_postgres:
+    image: postgres:13
+    container_name: meu_postgres
+    environment:
+      POSTGRES_DB: meubanco
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Volume persistente para dados
+      - ./app/banco:/docker-entrypoint-initdb.d  # Inicialização com scripts SQL, se necessário
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+
+  app:
+    build: .
+    container_name: matematicanavida
+    volumes:
+      - ./app:/app  # Montando o código da aplicação no contêiner
+    depends_on:
+      - meu_postgres
+    environment:
+      - FLASK_APP=main 
+      - FLASK_ENV=development  # Definindo o Flask em ambiente de desenvolvimento
+      - DATABASE_URL=postgresql://usuario:senha@meu_postgres:5432/meubanco  # URL do banco de dados PostgreSQL
+    ports:
+      - "5000:5000"  # Expondo a porta 5000 para o Flask
+    command: flask run --host=0.0.0.0 --port=5000  # Comando para rodar o Flask
+    networks:
+      - app_network  # Rede compartilhada
+
+volumes:
+  postgres_data:  # Volume persistente para o PostgreSQL
+
+networks:
+  app_network:  # Rede compartilhada entre os serviços Flask e PostgreSQL
+    driver: bridge  # Usando a rede bridge para comunicação entre os containers
