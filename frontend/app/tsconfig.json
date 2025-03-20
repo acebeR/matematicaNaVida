@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2015", // Alterei para es2015
+    "module": "es2020", // Alterei para es2020
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": false,
+    "noEmitHelpers": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2018", "dom"],
+    "experimentalDecorators": true // Habilitado para usar decorators
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

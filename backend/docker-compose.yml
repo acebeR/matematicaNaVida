@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  backend:
+    build:
+      context: ./app  # Caminho para o diretório onde está o Dockerfile do back-end
+    container_name: matematicanavida-backend
+    ports:
+      - "5000:5000"  # Expondo a porta 5000 do Flask para a máquina local
+    environment:
+      - FLASK_APP=main.py  # Arquivo principal do Flask
+      - FLASK_ENV=production  # Ambiente de produção
+      - DATABASE_URL=postgresql://usuario:senha@meu_postgres:5432/meubanco  # URL de conexão com o banco
+    depends_on:
+      - meu_postgres  # O back-end depende do banco de dados estar pronto
+    networks:
+      - app_network  # Rede compartilhada entre os serviços
+
   meu_postgres:
     image: postgres:13
     container_name: meu_postgres
@@ -9,33 +24,15 @@ services:
       POSTGRES_USER: usuario
       POSTGRES_PASSWORD: senha
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Volume persistente para dados
-      - ./app/banco:/docker-entrypoint-initdb.d  # Inicialização com scripts SQL, se necessário
+      - postgres_data:/var/lib/postgresql/data  # Volume para persistência de dados
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Expondo a porta do PostgreSQL para a máquina local
     networks:
-      - app_network
-
-  app:
-    build: .
-    container_name: matematicanavida
-    volumes:
-      - ./app:/app  # Montando o código da aplicação no contêiner
-    depends_on:
-      - meu_postgres
-    environment:
-      - FLASK_APP=main 
-      - FLASK_ENV=development  # Definindo o Flask em ambiente de desenvolvimento
-      - DATABASE_URL=postgresql://usuario:senha@meu_postgres:5432/meubanco  # URL do banco de dados PostgreSQL
-    ports:
-      - "5000:5000"  # Expondo a porta 5000 para o Flask
-    command: flask run --host=0.0.0.0 --port=5000  # Comando para rodar o Flask
-    networks:
-      - app_network  # Rede compartilhada
-
-volumes:
-  postgres_data:  # Volume persistente para o PostgreSQL
+      - app_network  # Rede compartilhada entre os serviços
 
 networks:
-  app_network:  # Rede compartilhada entre os serviços Flask e PostgreSQL
-    driver: bridge  # Usando a rede bridge para comunicação entre os containers
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

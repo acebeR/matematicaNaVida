@@ -1,0 +1,26 @@
+# Ignore a pasta node_modules
+node_modules/
+
+# Ignore arquivos de log
+*.log
+
+# Ignore arquivos de configuração específicos do editor
+.idea/
+.vscode/
+
+# Ignore arquivos temporários
+*.swp
+*.swo
+*.bak
+
+# Ignore os arquivos de build gerados pelo Webpack
+/dist/
+
+# Ignore os arquivos de cache do npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore o arquivo de configuração do sistema operacional
+.DS_Store
+Thumbs.db
