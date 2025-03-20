@@ -1,25 +1,20 @@
-# Usar a imagem oficial do Python 3.9
+# Usar a imagem oficial do Python
 FROM python:3.9-slim
 
-# Definir o diretório de trabalho dentro do contêiner
+# Definir diretório de trabalho dentro do contêiner
 WORKDIR /app
 
 # Copiar os arquivos de dependências
 COPY ./app/requirements.txt /app/requirements.txt
 
-
-
 # Instalar as dependências
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copiar o restante do código da aplicação
-COPY ./ /app/
+COPY ./app /app
 
-# Expor a porta do back-end (5000)
+# Expor a porta 5000 para acesso externo
 EXPOSE 5000
 
-# Instalar Gunicorn para rodar o Flask em produção
-RUN pip install gunicorn
-
-# Rodar o servidor com Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+# Definir o comando para rodar o Flask
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
