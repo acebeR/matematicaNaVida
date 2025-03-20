@@ -48,6 +48,7 @@ http://localhost:4200
 - nvm use 18
 - npm install -g @angular/cli
 - npm install rxjs --save
+- npm start
 
 
 
